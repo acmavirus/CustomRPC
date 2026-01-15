@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -27,17 +27,22 @@ jobs:
       run: |
         pyinstaller --noconfirm --onefile --windowed --name "DiscordCustomRP" --clean main.py
 
-    - name: Fix Permissions
+    - name: Fix Permissions and Metadata
       run: |
+        # Đảm bảo file thực thi có quyền chạy
         chmod +x dist/DiscordCustomRP.app/Contents/MacOS/DiscordCustomRP
+        # Xóa các thuộc tính mở rộng có thể gây lỗi quarantine
+        xattr -cr dist/DiscordCustomRP.app
 
     - name: Create DMG
       run: |
-        hdiutil create -volname "DiscordCustomRP" -srcfolder dist/DiscordCustomRP.app -ov -format UDZO DiscordCustomRP.dmg
+        # Tạo folder đệm để chứa App (giúp DMG đẹp hơn)
+        mkdir -p dmg_root
+        cp -R dist/DiscordCustomRP.app dmg_root/
+        hdiutil create -volname "DiscordCustomRP" -srcfolder dmg_root -ov -format UDZO DiscordCustomRP.dmg
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: DiscordCustomRP-macOS
-        path: |
-          DiscordCustomRP.dmg
+        path: DiscordCustomRP.dmg
