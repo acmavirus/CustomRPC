@@ -10,25 +10,24 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r PythonApp/requirements.txt
+        pip install -r requirements.txt
 
     - name: Build with PyInstaller
       run: |
-        cd PythonApp
         pyinstaller --noconfirm --onefile --windowed --name "DiscordCustomRP" --clean main.py
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: DiscordCustomRP-macOS
-        path: PythonApp/dist/DiscordCustomRP.app
+        path: dist/DiscordCustomRP.app
