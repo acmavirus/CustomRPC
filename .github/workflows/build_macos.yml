@@ -26,8 +26,15 @@ jobs:
       run: |
         pyinstaller --noconfirm --onefile --windowed --name "DiscordCustomRP" --clean main.py
 
+    - name: Create DMG
+      run: |
+        # Tạo file DMG từ thư mục .app
+        hdiutil create -volname "DiscordCustomRP" -srcfolder dist/DiscordCustomRP.app -ov -format UDZO DiscordCustomRP.dmg
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: DiscordCustomRP-macOS
-        path: dist/DiscordCustomRP.app
+        path: |
+          dist/DiscordCustomRP.app
+          DiscordCustomRP.dmg
