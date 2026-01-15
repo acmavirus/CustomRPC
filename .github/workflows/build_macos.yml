@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-13
 
     steps:
     - uses: actions/checkout@v4
@@ -21,14 +21,18 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        pip install customtkinter pypresence
 
     - name: Build with PyInstaller
       run: |
         pyinstaller --noconfirm --onefile --windowed --name "DiscordCustomRP" --clean main.py
 
+    - name: Fix Permissions
+      run: |
+        chmod +x dist/DiscordCustomRP.app/Contents/MacOS/DiscordCustomRP
+
     - name: Create DMG
       run: |
-        # Tạo file DMG từ thư mục .app
         hdiutil create -volname "DiscordCustomRP" -srcfolder dist/DiscordCustomRP.app -ov -format UDZO DiscordCustomRP.dmg
 
     - name: Upload Artifact
@@ -36,5 +40,4 @@ jobs:
       with:
         name: DiscordCustomRP-macOS
         path: |
-          dist/DiscordCustomRP.app
           DiscordCustomRP.dmg
