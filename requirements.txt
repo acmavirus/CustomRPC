@@ -1,0 +1,4 @@
+pypresence
+customtkinter
+pillow
+pyinstaller
